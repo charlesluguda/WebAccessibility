@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Accessibility Checker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+    <div class="main-container">
+        <h1>Web Accessibility Checker</h1>
+    
+        <form id="audit-form">
+            <label for="url">Website URL:</label>
+            <input type="url" id="url" name="url" required>
+            <button type="submit">Check Accessibility</button>
+        </form>
+    </div>
+    <div id="loader"></div>
+    <div id="results"></div>
+    </div>
+    
+
+    <script>
+        document.getElementById('audit-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+            const loader = document.getElementById('loader');
+            const resultsDiv = document.getElementById('results');
+
+            // Show the loader and clear previous results
+            loader.style.display = 'block';
+            resultsDiv.innerHTML = '';
+
+            const response = await fetch(`/audit?url=${encodeURIComponent(url)}`);
+            const data = await response.json();
+
+            // Hide the loader
+            loader.style.display = 'none';
+
+            if (data.issues.length === 0) {
+                resultsDiv.innerHTML = '<p>No accessibility issues found.</p>';
+            } else {
+                data.issues.forEach(issue => {
+                    const issueDiv = document.createElement('div');
+                    issueDiv.classList.add('issue', 'error');
+                    issueDiv.innerHTML = `
+                        <strong>${issue.code}:</strong> ${issue.message}<br>
+                        <pre>${issue.context}</pre>
+                    `;
+                    resultsDiv.appendChild(issueDiv);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
