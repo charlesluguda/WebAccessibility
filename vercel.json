@@ -1,1 +1,10 @@
-{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/audit" }] }
+{
+    "version": 2,
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/public/$1"
+      }
+    ]
+  }
+  

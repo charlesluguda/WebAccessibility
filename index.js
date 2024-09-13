@@ -1,10 +1,9 @@
-// server.js
 const express = require('express');
 const pa11y = require('pa11y');
 const app = express();
 const port = 3000;
 
-// Serve static files
+
 app.use(express.static('public'));
 
 app.get('/audit', async (req, res) => {
@@ -29,3 +28,5 @@ app.get('/audit', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
+
+module.exports = app;
